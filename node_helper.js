@@ -37,8 +37,11 @@ module.exports = NodeHelper.create({
         }
     },
 
-    captureFrame: function () {        
-        let command = `ffmpeg -y -i ${this.config.url}${this.config.protocol === "tcp" ? " -rtsp_transport tcp" : "" } -frames:v 1 ${this.path}\\public\\frame.jpg`;
+    captureFrame: function () {
+        console.log(`process.platform: ${process.platform}`);
+        var isWin = process.platform === "win32";
+        let imagePath = isWin ? `${this.path}\\public\\frame.jpg` : `${this.path}/public/frame.jpg`;
+        let command = `ffmpeg -y -i ${this.config.url}${this.config.protocol === "tcp" ? " -rtsp_transport tcp" : "" } -frames:v 1 ${imagePath}`;
         this.config.debug && console.log(`${this.name} - Execute: ${command}`);
         exec(command, (err, stdout, stderr) => {
             if (err) {
